@@ -9,11 +9,10 @@ import {
 // =========================================================
 // 1. 설정 및 변수
 // =========================================================
-// ⚠️ 실제 LiveKit 서버 및 NestJS 서버 주소로 변경해야 합니다!
-const LIVEKIT_URL = "wss://webrtctest-hdcsqoeo.livekit.cloud";
+// const LIVEKIT_URL = "wss://webrtctest-hdcsqoeo.livekit.cloud"; // cloudService
+const LIVEKIT_URL = "http://127.0.0.1:7880";
 const NESTJS_BASE_URL = "https://192.168.100.56:8181";
 
-const ROOM_NAME = "my-livekit-room";
 const userName = "User-" + Math.floor(Math.random() * 1000);
 
 // DOM 요소를 담을 변수 (DOMContentLoaded에서 초기화)
