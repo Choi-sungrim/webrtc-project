@@ -1,0 +1,37 @@
+# This docker-compose requires host networking, which is only available on Linux
+# This compose will not function correctly on Mac or Windows
+services:
+  caddy:
+    image: livekit/caddyl4
+    command: run --config /etc/caddy.yaml --adapter yaml
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./caddy.yaml:/etc/caddy.yaml
+      - caddy_data:/data
+    depends_on:
+      - livekit
+  livekit:
+    image: livekit/livekit-server:latest
+    command: --config /etc/livekit.yaml
+    restart: unless-stopped
+    ports:
+      - "7880:7880"
+      - "7881:7881"
+    volumes:
+      - ./livekit.yaml:/etc/livekit.yaml
+    depends_on:
+      - redis
+  redis:
+    image: redis:6-alpine
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+volumes:
+  caddy_data:
+  redis_data:

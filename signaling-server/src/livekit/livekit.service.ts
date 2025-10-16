@@ -6,12 +6,21 @@ export class LivekitService {
   private readonly roomService: RoomServiceClient;
   private readonly apiKey: string;
   private readonly apiSecret: string;
+  private readonly host: string;
 
   constructor() {
     this.apiKey = process.env.LIVEKIT_API_KEY as string;
     this.apiSecret = process.env.LIVEKIT_API_SECRET as string;
+    this.host = process.env.LIVEKIT_URL as string;
+
+    if (!this.host || !this.apiKey || !this.apiSecret) {
+      throw new Error(
+        `LiveKit environment variables (URL${this.host}, KEY${this.apiKey}, SECRET ${this.apiSecret}) must be set.`,
+      );
+    }
+
     this.roomService = new RoomServiceClient(
-      process.env.LIVEKIT_URL as string,
+      this.host,
       this.apiKey,
       this.apiSecret,
     );
@@ -49,12 +58,9 @@ export class LivekitService {
 
   async listRooms(): Promise<Room[]> {
     try {
-      // RoomServiceClient.listRooms()가 실패하면 여기서 catch됩니다.
       return await this.roomService.listRooms();
     } catch (error) {
       console.error('LiveKit 서버에서 룸 목록 조회 실패:', error);
-      // ⭐️ 오류 발생 시 빈 배열을 반환하거나, 적절한 HTTP 예외를 던집니다.
-      // 여기서는 클라이언트에 빈 목록을 보여주기 위해 빈 배열을 반환합니다.
       return [];
     }
   }
