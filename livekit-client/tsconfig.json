@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "es2020",
+    "module": "esnext",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "moduleResolution": "node"
+  },
+  // ⭐️ 컴파일 대상 파일을 명시적으로 지정합니다. ⭐️
+  "include": ["./scripts.js"]
+}
