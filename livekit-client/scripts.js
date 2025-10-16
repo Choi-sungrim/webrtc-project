@@ -158,8 +158,8 @@ const setupRoomListeners = (room) => {
   });
 
   room.on(RoomEvent.TrackUnsubscribed, (track, publication, participant) => {
-    console.log(`트랙 구독 해제됨: ${track.kind} from ${participant.identity}`);
-    detachTrackFromParticipantBox(track, participant);
+    console.log(`트랙 해제됨: ${track.kind} from ${participant.identity}`);
+    detachTrackFromParticipantBox(participant);
   });
 
   room.on(RoomEvent.DataReceived, (payload, participant) => {
@@ -407,25 +407,27 @@ function attachTrackToParticipantBox(track, participant) {
 }
 
 /** 트랙을 DOM에서 제거하고, 참가자의 박스에 트랙이 남아있지 않으면 박스 전체를 제거합니다. */
-function detachTrackFromParticipantBox(track, participant) {
-  const box = document.getElementById(`participant-${participant.identity}`);
-  if (!box) return;
-
-  track.detach().forEach((el) => el.remove());
-
-  // 트랙 제거 후, 해당 참가자에게 다른 트랙이 남아있는지 확인
-  const hasRemainingTracks = participant.getTracks().some((pub) => pub.track);
-
-  if (!hasRemainingTracks) {
-    box.remove();
+function detachTrackFromParticipantBox(participant) {
+  if (!participant || typeof participant.getTracks !== "function") {
+    console.warn(
+      "Error: Invalid participant object or getTracks() method not found.",
+      participant
+    );
+    // 유효하지 않은 객체이므로 함수 실행을 중단합니다.
+    return;
   }
 
-  // 모든 참가자가 나갔는지 확인하여 #waiting 메시지 다시 표시
-  if (
-    room &&
-    room.participants.size === 0 &&
-    !room.localParticipant.isPublishing
-  ) {
-    if (waitingEl) waitingEl.style.display = "block";
+  // getTracks()가 안전하게 호출될 수 있습니다.
+  const remainingPublications = participant.getTracks() || [];
+
+  // 2. 트랙 배열에 하나라도 활성화된 트랙이 남아있는지 확인합니다.
+  // pub.track은 RemoteTrack (AudioTrack, VideoTrack 등) 객체이며, null이면 트랙이 해제된 것입니다.
+  const hasRemainingTracks = remainingPublications.some((pub) => pub.track);
+
+  if (!hasRemainingTracks) {
+    // 3. 더 이상 트랙이 없으면 참가자 박스를 제거합니다.
+    const box = document.getElementById(`box-${participant.sid}`);
+    // box가 null/undefined일 수 있으므로 옵셔널 체이닝으로 안전하게 제거합니다.
+    box?.remove();
   }
 }
