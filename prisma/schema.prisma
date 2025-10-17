@@ -1,0 +1,513 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("MARIADB_URL")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model api_key {
+  ak_id           Int      @id @default(autoincrement())
+  ak_type         String   @db.VarChar(100)
+  ak_package_name String   @default("") @db.VarChar(255)
+  ak_bundle_id    String   @default("") @db.VarChar(255)
+  ak_device_id    String   @db.VarChar(255)
+  ak_client_id    String   @db.VarChar(255)
+  ak_key          String   @db.VarChar(255)
+  ak_del          Int      @default(0)
+  created_at      DateTime @default(now()) @db.Timestamp(0)
+  updated_at      DateTime @default(dbgenerated("('0000-00-00 00:00:00')")) @db.Timestamp(0)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model hw {
+  hw_id      Int      @id @default(autoincrement())
+  hw_name    String   @db.VarChar(50)
+  hw_del     Int      @default(0)
+  created_at DateTime @default(now()) @db.Timestamp(0)
+  updated_at DateTime @default(dbgenerated("('0000-00-00 00:00:00')")) @db.Timestamp(0)
+  robot      robot[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model menu {
+  m_id         Int      @id @default(autoincrement())
+  m_code       String   @db.VarChar(2)
+  m_page_code  String   @db.VarChar(2)
+  m_func_code  String   @db.VarChar(2)
+  m_title      String   @db.VarChar(255)
+  m_title_en   String   @default("") @db.VarChar(255)
+  m_page_url   String   @default("") @db.VarChar(255)
+  m_order      Int      @default(0)
+  m_group      String   @default("") @db.VarChar(20)
+  m_page_order Int      @default(0)
+  m_show       Int      @default(0)
+  m_del        Int      @default(0)
+  created_at   DateTime @default(now()) @db.Timestamp(0)
+  updated_at   DateTime @default(dbgenerated("('0000-00-00 00:00:00')")) @db.Timestamp(0)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model menu_func {
+  mf_id      Int      @id @default(autoincrement())
+  menu_code  String   @db.VarChar(10)
+  mf_code    String   @db.VarChar(255)
+  mf_title   String   @db.VarChar(255)
+  mf_order   Int      @default(0)
+  mf_comm    Int      @default(0)
+  mf_del     Int      @default(0)
+  created_at DateTime @default(now()) @db.Timestamp(0)
+  updated_at DateTime @default(dbgenerated("('0000-00-00 00:00:00')")) @db.Timestamp(0)
+
+  @@unique([mf_id, mf_del], map: "mf_code")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model notify {
+  ntf_id        Int
+  ntf_site      String   @db.VarChar(255)
+  ntf_serial    String   @db.VarChar(255)
+  ntf_time      String   @db.VarChar(50)
+  ntf_level     Int
+  ntf_source    String   @db.VarChar(255)
+  ntf_keyword   String   @db.VarChar(255)
+  ntf_info      String   @db.Text
+  ntf_done      Int      @default(0)
+  ntf_done_at   DateTime @default(dbgenerated("('0000-00-00 00:00:00')")) @db.Timestamp(0)
+  ntf_clear_uid String   @default("") @db.VarChar(255)
+  ntf_at        DateTime @default(now()) @db.Timestamp(0)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model notify_locale {
+  nl_id       Int      @id @default(autoincrement())
+  nl_keyword  String   @db.VarChar(255)
+  nl_ko_title String   @default("")  @db.VarChar(255)
+  nl_ko       String   @db.VarChar(255)
+  nl_en_title String   @default("")  @db.VarChar(255)
+  nl_en       String   @db.VarChar(255)
+  nl_cn_title String   @default("")  @db.VarChar(255)
+  nl_cn       String   @default("")  @db.VarChar(255)
+  nl_jp_title String   @default("")  @db.VarChar(255)
+  nl_jp       String   @default("")  @db.VarChar(255)
+  nl_fms      Int      @default(0)
+  nl_setup    Int      @default(0)
+  nl_del      Int      @default(0)
+  created_at  DateTime @default(now()) @db.Timestamp(0)
+  updated_at  DateTime @default(dbgenerated("('0000-00-00 00:00:00')")) @db.Timestamp(0)
+
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model notify_manager {
+  nm_id      Int
+  ntf_id     Int
+  nr_id      Int
+  uid        String   @db.VarChar(255)
+  nm_read    Int      @default(0)
+  nm_read_at DateTime @default(dbgenerated("('0000-00-00 00:00:00')")) @db.Timestamp(0)
+  nm_del     Int      @default(0)
+  created_at DateTime @default(now()) @db.Timestamp(0)
+  updated_at DateTime @default(dbgenerated("('0000-00-00 00:00:00')")) @db.Timestamp(0)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model notify_reply {
+  nr_id      Int
+  ntf_id     Int
+  uid        String   @db.VarChar(255)
+  nr_context String   @db.Text
+  nr_state   Int      @default(0)
+  nr_manager Int      @default(0)
+  nr_del     Int      @default(0)
+  created_at DateTime @default(now()) @db.Timestamp(0)
+  updated_at DateTime @default(dbgenerated("('0000-00-00 00:00:00')")) @db.Timestamp(0)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model notify_type {
+  nt_id       Int
+  nt_level    Int
+  nt_txt      String   @db.VarChar(255)
+  nt_noti     Int      @default(1)
+  nt_new_noti Int      @default(1)
+  nt_sound    Int      @default(1)
+  nt_del      Int      @default(0)
+  created_at  DateTime @default(now()) @db.Timestamp(0)
+  updated_at  DateTime @default(dbgenerated("('0000-00-00 00:00:00')")) @db.Timestamp(0)
+
+  @@ignore
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model params_command {
+  id                      Int      @id @default(autoincrement())
+  uuid                    String   @db.VarChar(255)
+  uid                     String   @db.VarChar(255)
+  agent_id                String   @db.VarChar(255)
+  command                 Int
+  command_contents        String   @default("") @db.VarChar(255)
+  result_code             Int      @default(0)
+  command_result_contents String   @default("") @db.VarChar(255)
+  created_at              DateTime @default(now()) @db.Timestamp(0)
+  updated_at              DateTime @default(dbgenerated("('0000-00-00 00:00:00')")) @db.Timestamp(0)
+  finished_at             DateTime @default(dbgenerated("('0000-00-00 00:00:00')")) @db.Timestamp(0)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model params_write_log {
+  pwl_id     Int      @id @default(autoincrement())
+  uid        String   @db.VarChar(255)
+  pwl_repo   String   @db.VarChar(50)
+  pwl_state  Int      @default(0)
+  created_at DateTime @default(now()) @db.Timestamp(0)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model push {
+  ps_id        Int      @id @default(autoincrement())
+  robot_serial String   @db.VarChar(255)
+  uid          String   @db.VarChar(255)
+  ps_token     String   @default("") @db.VarChar(255)
+  ps_keyword   String   @db.VarChar(255)
+  ps_title     String   @db.VarChar(255)
+  ps_level     Int
+  ps_body      String   @db.VarChar(255)
+  ps_time      String   @db.VarChar(255)
+  ps_status    Int      @default(0)
+  ps_type      String   @default("") @db.VarChar(100)
+  ps_return    String   @default("") @db.Text
+  ps_del       Int      @default(0)
+  created_at   DateTime @default(now()) @db.Timestamp(0)
+  updated_at   DateTime @default(dbgenerated("('0000-00-00 00:00:00')")) @db.Timestamp(0)
+
+  @@index([robot_serial, ps_time, ps_del, ps_type], map: "robot_serial")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model push_keyword {
+  pk_id       Int      @id @default(autoincrement())
+  pk_keyword  String   @db.VarChar(255)
+  pk_type     Int
+  pk_fcm_type String   @default("") @db.VarChar(50)
+  pk_del      Int      @default(0)
+  created_at  DateTime @default(now()) @db.Timestamp(0)
+  updated_at  DateTime? @db.Timestamp(0)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model robot {
+  id                       Int      @id @default(autoincrement())
+  site_id                  String   @db.VarChar(255)
+  robot_serial             String   @db.VarChar(255)
+  robot_version            String   @default("") @db.VarChar(10)
+  robot_name               String   @db.VarChar(255)
+  robot_ip                 String   @db.VarChar(255)
+  robot_floor              String   @default("") @db.Text
+  robot_poi                String   @default("") @db.Text
+  robot_el                 String   @default("") @db.Text
+  robot_orgin              Int      @default(0)
+  robot_el_use             Int      @default(0)
+  robot_mp_use             Int      @default(0)
+  robot_cam                Int      @default(0)
+  robot_cam_open           Int      @default(0)
+  robot_cam_type           Int      @default(0)
+  robot_docent             Int      @default(0)
+  robot_sns_use            Int      @default(0)
+  robot_sns_template       String   @default("") @db.VarChar(100)
+  robot_snack_use          Int      @default(0)
+  robot_snack_default_tray Int      @default(0)
+  rt_id                    Int      @default(0)
+  robot_map_default        Int      @default(0)
+  robot_app_etc            String   @default("") @db.Text
+  robot_prev_data          String   @default("") @db.Text
+  robot_del                Int      @default(0)
+  hw_id                    Int      @default(0)
+  sc_id                    Int      @default(0)
+  robot_qc_state           Int      @default(0)
+  sc_updated_uid           String   @default("") @db.VarChar(255)
+  sc_updated_at            DateTime? @db.Timestamp(0)
+  uid                      String   @default("") @db.VarChar(255)
+  robot_branch             String   @default("") @db.VarChar(255)
+  git_update_uid           String   @default("") @db.VarChar(255)
+  git_update_dt            DateTime? @db.Timestamp(0)
+  robot_sw_version         String   @default("") @db.VarChar(20)
+  robot_sw_version_dt      DateTime? @db.Timestamp(0)
+  created_at               DateTime @default(now()) @db.Timestamp(0)
+  updated_at               DateTime? @db.Timestamp(0)
+  robot_connect_at         DateTime? @db.Timestamp(0)
+  ss_id                    Int      @default(0)
+  hw                       hw?      @relation(fields: [hw_id], references: [hw_id])
+  site_server              site_server?     @relation(fields: [ss_id], references: [ss_id])
+  robot_type               robot_type?      @relation(fields: [rt_id], references: [rt_id])
+  robot_area               robot_area[]
+  setup_company            setup_company?   @relation(fields: [sc_id], references: [sc_id])
+  robot_category           String   @default("") @db.VarChar(100)
+
+  @@index([robot_serial, robot_del], map: "robot_serial")
+  @@index([site_id], map: "site_id")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model robot_alimtalk {
+  ra_id        Int      @id @default(autoincrement())
+  robot_serial String   @db.VarChar(255)
+  ra_keyword   String   @db.VarChar(255)
+  ra_template  String   @db.VarChar(100)
+  ra_poi       Int      @default(0)
+  ra_del       Int      @default(0)
+  created_at   DateTime @default(now()) @db.Timestamp(0)
+  updated_at   DateTime @default(now()) @db.Timestamp(0)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model robot_area {
+  ra_id         Int      @id @default(autoincrement())
+  robot_id      Int
+  robot_serial  String   @db.VarChar(255)
+  ra_floor      String   @db.VarChar(10)
+  ra_map        String   @db.VarChar(255)
+  ra_order      Int
+  ra_origin1    Float    @db.Float
+  ra_origin2    Float    @db.Float
+  ra_resolution Decimal  @default(0.00) @db.Decimal(3, 2)
+  ra_map_w      Int
+  ra_map_h      Int
+  ra_yaml       String   @db.VarChar(255)
+  ra_del        Int      @default(0)
+  created_at    DateTime @default(now()) @db.Timestamp(0)
+  updated_at    DateTime @default(dbgenerated("('0000-00-00 00:00:00')")) @db.Timestamp(0)
+  robot         robot?   @relation(fields: [robot_id], references: [id])
+
+  @@index([robot_serial, ra_floor, ra_del], map: "robot_serial")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model robot_drive_result {
+  id         Int      @id @default(autoincrement())
+  agent_id   String   @db.VarChar(255)
+  result     String   @db.VarChar(255)
+  uuid       String   @db.VarChar(255)
+  created_at DateTime @default(now()) @db.DateTime(6)
+  updated_at DateTime @default(now()) @db.DateTime(6)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model robot_lang {
+  rl_id      Int      @id @default(autoincrement())
+  rl_lang    String   @db.VarChar(50)
+  rl_name    String   @db.VarChar(100)
+  rl_order   Int      @default(0)
+  rl_del     Int      @default(0)
+  created_at DateTime @default(now()) @db.Timestamp(0)
+  updated_at DateTime @default(dbgenerated("('0000-00-00 00:00:00')")) @db.Timestamp(0)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model robot_screen {
+  rs_id             Int      @id @default(autoincrement())
+  rs_key            String   @db.VarChar(50)
+  rs_order          Int      @default(0)
+  rs_input          Int      @default(0)
+  rs_options        String   @default("") @db.Text
+  rs_input_required Int      @default(0)
+  rs_del            Int      @default(0)
+  created_at        DateTime @default(now()) @db.Timestamp(0)
+  updated_at        DateTime @default(dbgenerated("('0000-00-00 00:00:00')")) @db.Timestamp(0)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model robot_type {
+  rt_id             Int      @id @default(autoincrement())
+  rt_version        String   @db.VarChar(50)
+  rt_tray           String   @db.VarChar(100)
+  rt_tray_cnt       Int      @default(2)
+  rt_image_unlinked String   @default("") @db.VarChar(255)
+  rt_image_error    String   @default("") @db.VarChar(255)
+  rt_image_charging String   @default("") @db.VarChar(255)
+  rt_image_running  String   @default("") @db.VarChar(255)
+  rt_image_linked   String   @default("") @db.VarChar(255)
+  rt_lidar_location Decimal  @default(0.00) @db.Decimal(3, 2)
+  rt_length         Float    @default(0) @db.Float
+  rt_width          Float    @default(0) @db.Float
+  rt_del            Int      @default(0)
+  created_at        DateTime @default(now()) @db.Timestamp(0)
+  updated_at        DateTime @default(dbgenerated("('0000-00-00 00:00:00')")) @db.Timestamp(0)
+  robot             robot[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model setup_company {
+  sc_id             Int      @id @default(autoincrement())
+  sc_code           String   @db.VarChar(20)
+  sc_name           String   @db.VarChar(255)
+  sc_address        String   @default("") @db.VarChar(255)
+  sc_contact_number String   @db.VarChar(50)
+  sc_manager_name   String   @default("") @db.VarChar(100)
+  sc_manager_email  String   @default("") @db.VarChar(255)
+  uid               String   @db.VarChar(255)
+  sc_del            Int      @default(0)
+  created_at        DateTime @default(now()) @db.Timestamp(0)
+  updated_at        DateTime @default(dbgenerated("('0000-00-00 00:00:00')")) @db.Timestamp(0)
+  robot             robot[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model site_server {
+  ss_id           Int      @id @default(autoincrement())
+  site_id         String   @db.VarChar(255)
+  site_name       String   @db.VarChar(255)
+  site_ename      String   @default("") @db.VarChar(255)
+  site_ip         String   @db.VarChar(255)
+  robot_cnt       Int      @default(0)
+  site_poi        String   @default("") @db.Text
+  site_el         String   @default("") @db.VarChar(255)
+  site_domain     String   @db.VarChar(255)
+  site_order      Int      @default(0)
+  site_token      String   @default("") @db.VarChar(255)
+  site_del        Int      @default(0)
+  site_poi_at     DateTime? @db.Timestamp(0)
+  site_el_at      DateTime? @db.Timestamp(0)
+  site_actived_at DateTime? @db.Timestamp(0)
+  site_app_use    Int      @default(0)
+  site_app_id     String   @default("") @db.VarChar(255)
+  app_etc         String   @default("") @db.Text
+  hw_id           Int      @default(0)
+  uid             String   @default("") @db.VarChar(255)
+  sc_id           Int      @default(0)
+  tz_id           Int      @default(0)
+  created_at      DateTime @default(now()) @db.Timestamp(0)
+  updated_at      DateTime  @default(now()) @db.Timestamp(0)
+  robot           robot[]
+  @@index([site_id, site_del], map: "site_id")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model task {
+  task_id         Int      @id @default(autoincrement())
+  robot_serial    String   @db.VarChar(255)
+  task_target_poi String   @db.VarChar(100)
+  task_type       String   @db.VarChar(100)
+  task_status     String   @default("") @db.VarChar(100)
+  task_caller_id  String   @db.VarChar(255)
+  task_robot_id   Int      @default(0)
+  task_reg_time   String   @db.VarChar(50)
+  created_at      DateTime @default(now()) @db.Timestamp(0)
+
+  @@index([robot_serial, task_type], map: "robot_serial")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model time_zone {
+  tz_id       Int    @id @default(autoincrement())
+  tz_code     String @db.VarChar(10)
+  tz_country  String @db.VarChar(50)
+  tz_timezone String @db.VarChar(50)
+  tz_gmt      String @db.VarChar(10)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model user {
+  id              Int       @id @default(autoincrement())
+  email           String    @db.VarChar(255)
+  uid             String    @db.VarChar(255)
+  name            String    @db.VarChar(255)
+  refresh_token   String?   @default("") @db.Text
+  level           Int       @default(0)
+  department      String    @default("") @db.VarChar(255)
+  del             Int       @default(0)
+  approved        Int       @default(0)
+  lang            String    @default("en") @db.VarChar(10)
+  tel             String    @default("") @db.VarChar(50)
+  password        String    @default("") @db.VarChar(255)
+  type            String    @default("user") @db.VarChar(20)
+  site_id         String    @default("") @db.VarChar(100)
+  sc_id           Int       @default(0)
+  approved_at     DateTime? @default(dbgenerated("NOW()")) @db.Timestamp(0)
+  user_notice     Boolean   @default(true)
+  server_notice   Boolean   @default(true)
+  order_notice    Boolean   @default(false)
+  fcm_token       String    @default("") @db.VarChar(255)
+  platform_type   String    @default("") @db.VarChar(50)
+  params_write    String    @default("") @db.VarChar(50)
+  params_write_at DateTime? @db.Timestamp(0)
+  timezone        String    @default("Asia/Seoul") @db.VarChar(100)
+  created_at      DateTime  @default(now()) @db.Timestamp(0)
+  updated_at      DateTime  @default(now()) @updatedAt @db.Timestamp(0)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model user_role {
+  ur_id      Int      @id @default(autoincrement())
+  uid        String   @db.VarChar(255)
+  menu_code  String   @db.VarChar(10)
+  mf_code    String   @db.VarChar(255)
+  ur_group   String   @db.VarChar(20)
+  ur_del     Int      @default(0)
+  created_at DateTime @default(now()) @db.Timestamp(0)
+  updated_at DateTime @default(dbgenerated("('0000-00-00 00:00:00')")) @db.Timestamp(0)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model vendor_auth {
+  va_id          Int                    @id @default(autoincrement())
+  va_vendor_id   String                 @db.VarChar(64)
+  va_access_key  String                 @db.VarChar(64)
+  va_secret_key  String                 @db.VarChar(64)
+  created_at     DateTime?              @default(now()) @db.Timestamp(0)
+  updated_at     DateTime?              @default(now()) @db.Timestamp(0)
+  va_status      vendor_auth_va_status? @default(active)
+  va_status_text String                 @db.Text
+
+  @@index([va_vendor_id, va_access_key, va_secret_key], map: "va_vendor_id")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model vendor_ip {
+  vi_id      Int       @id @default(autoincrement())
+  va_id      Int
+  vi_ip      String    @db.VarChar(45)
+  created_at DateTime? @default(now()) @db.Timestamp(0)
+
+  @@index([va_id, vi_ip], map: "va_id")
+  @@index([vi_ip], map: "vi_ip")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model vendor_user {
+  vu_id       Int      @id @default(autoincrement())
+  vu_user_id  String   @db.VarChar(100)
+  vu_user_pwd String   @db.VarChar(255)
+  vu_del      Int      @default(0)
+  created_at  DateTime @default(now()) @db.Timestamp(0)
+  updated_at  DateTime @default(dbgenerated("('0000-00-00 00:00:00')")) @db.Timestamp(0)
+}
+
+enum vendor_auth_va_status {
+  active
+  inactive
+}
+
+model service_call_times {
+  scl_id            Int      @id @default(autoincrement())
+  scl_robot_id      String   @db.VarChar(255)
+  scl_service_name  String   @db.VarChar(255)
+  scl_service_func  String   @db.VarChar(255)
+  scl_service_key  String   @db.VarChar(255)
+  scl_time          String   @db.VarChar(255)
+  created_at        DateTime @default(now()) @db.Timestamp(0)
+}

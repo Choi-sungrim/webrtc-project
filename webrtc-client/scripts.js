@@ -1,11 +1,11 @@
 const userName = "User-" + Math.floor(Math.random() * 1000);
 const password = "x";
 document.querySelector("#user-name").textContent = userName;
-const localIp = "192.168.100.56";
-const socket = io(`https://${localIp}:8181`, {
+const localIp = "192.168.100.23";
+const socket = io(`http://${localIp}:8181`, {
   auth: { userName, password },
   transports: ["websocket"],
-  secure: true,
+  secure: false,
   rejectUnauthorized: false,
 });
 // DOM Elements
@@ -14,7 +14,7 @@ const remoteVideoEl = document.querySelector("#remote-video");
 const waitingEl = document.querySelector("#waiting");
 // WebRTC Configuration
 const peerConfiguration = {
-  iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+  iceServers: [{ urls: "livekit.host.com", turn: "livekit.host-turn.com" }],
   iceTransportPolicy: "all",
 };
 // WebRTC Variables

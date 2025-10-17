@@ -1,0 +1,63 @@
+version: "3.8"
+
+networks:
+  dbnet:
+    driver: bridge
+    internal: false
+
+services:
+  redis:
+    image: redis:latest
+    container_name: redis-container'
+    volumes:
+      - ./database/redis_db/data:/data
+      - ./database/redis_db/logs:/var/log/redis
+      - ./database/redis_db/conf/redis.conf:/usr/local/conf/redis.conf
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server /usr/local/conf/redis.conf
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - dbnet
+
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb-container
+    environment:
+      TZ: Asia/Seoul
+    volumes:
+      - ./database/mariadb/conf.d:/etc/mysql/conf.d
+      - ./database/mariadb/data:/var/lib/mysql
+      - ./database/mariadb/logs:/var/log/mysql
+      - ./database/mariadb/initdb.d:/docker-entrypoint-initdb.d
+    env_file: .env
+    restart: always
+    ports:
+      - "3310:3306"
+    networks:
+      - dbnet
+
+  mongodb-indoor:
+    image: mongo:latest
+    container_name: mongodb-id-container
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./database/mongo_indoor/data:/data/db
+      - ./database/mongo_indoor/logs:/data/logs
+      - ./database/mongo_indoor/conf/mongo.conf:/etc/mongo.conf
+    env_file: .env
+    environment:
+      - TZ=Asia/Seoul
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
+      - MONGO_INITDB_DATABASE=gaemi-indoor
+    command: mongod -f /etc/mongo.conf
+    networks:
+      - dbnet

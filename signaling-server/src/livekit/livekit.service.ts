@@ -9,7 +9,7 @@ export class LivekitService {
   private readonly host: string;
 
   constructor() {
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+    // process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
     this.apiKey = process.env.LIVEKIT_API_KEY as string;
     this.apiSecret = process.env.LIVEKIT_API_SECRET as string;
     this.host = process.env.LIVEKIT_URL as string;

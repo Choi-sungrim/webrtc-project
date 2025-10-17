@@ -10,7 +10,7 @@ import { Offer, ConnectedSocket } from './interfaces/offer.interface';
 
 @WebSocketGateway({
   cors: {
-    origin: ['https://localhost:3000', 'https://192.168.100.20:3000'],
+    origin: ['http://localhost:3000', 'http://192.168.23:3000'],
     methods: ['GET', 'POST'],
     credentials: true,
   },
@@ -23,6 +23,7 @@ export class SignalingGateway
   private connectedSockets: ConnectedSocket[] = [];
 
   handleConnection(socket: Socket) {
+    console.log(socket);
     const userName = socket.handshake.auth.userName;
     const password = socket.handshake.auth.password;
 
@@ -44,6 +45,7 @@ export class SignalingGateway
 
   @SubscribeMessage('newOffer')
   handleNewOffer(socket: Socket, newOffer: any) {
+    console.log(socket);
     const userName = socket.handshake.auth.userName;
     const newOfferEntry: Offer = {
       offererUserName: userName,
@@ -62,6 +64,7 @@ export class SignalingGateway
   // Answer handler with ICE candidate acknowledgment
   @SubscribeMessage('newAnswer')
   async awaithandleNewAnswer(socket: Socket, offerObj: any) {
+    console.log(socket);
     const userName = socket.handshake.auth.userName;
     const offerToUpdate = this.offers.find(
       (o) => o.offererUserName === offerObj.offererUserName,
@@ -86,6 +89,7 @@ export class SignalingGateway
   // ICE candidate handler with storage
   @SubscribeMessage('sendIceCandidateToSignalingServer')
   handleIceCandidate(socket: Socket, iceCandidateObj: any) {
+    console.log(socket);
     const { didIOffer, iceUserName, iceCandidate } = iceCandidateObj;
 
     // Store candidate in the offer object

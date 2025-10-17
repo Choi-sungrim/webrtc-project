@@ -4,27 +4,31 @@ import * as fs from 'fs';
 import { IoAdapter } from '@nestjs/platform-socket.io';
 
 async function bootstrap() {
-  const httpsOptions = {
-    key: fs.readFileSync('./livekit.host.com+1-key.pem'),
-    cert: fs.readFileSync('./livekit.host.com+1.pem'),
-  };
+  // const httpsOptions = {
+  //   key: fs.readFileSync('./livekit.host.com+1-key.pem'),
+  //   cert: fs.readFileSync('./livekit.host.com+1.pem'),
+  // };
 
-  const app = await NestFactory.create(AppModule, { httpsOptions });
+  // { httpsOptions }
+  const app = await NestFactory.create(AppModule);
   app.useWebSocketAdapter(new IoAdapter(app));
 
-  const localAddr = '192.168.100.20';
+  const localAddr = '192.168.100.23';
   const localPort = 3000;
   const listenPort = 8181;
   const https = 'https://';
+  const http = 'http://';
   app.enableCors({
     origin: [
       `${https}${localAddr}:${localPort}`,
       `${https}localhost:${localPort}`,
+      `${http}${localAddr}:${localPort}`,
+      `${http}localhost:${localPort}`,
     ],
-    credential: true,
+    credential: false,
   });
 
   await app.listen(listenPort);
-  console.log(`Signaling server running on ${https}${localAddr}:${listenPort}`);
+  console.log(`Signaling server running on ${http}${localAddr}:${listenPort}`);
 }
 bootstrap();
