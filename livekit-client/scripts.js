@@ -10,8 +10,8 @@ import {
 // 1. 설정 및 변수
 // =========================================================
 // const LIVEKIT_URL = "wss://webrtctest-hdcsqoeo.livekit.cloud"; // cloudService
-const LIVEKIT_URL = "http://127.0.0.1:7880";
-const NESTJS_BASE_URL = "https://192.168.100.56:8181";
+const LIVEKIT_URL = "wss://livekit.host.com";
+const NESTJS_BASE_URL = "https://192.168.100.20:8181";
 
 const userName = "User-" + Math.floor(Math.random() * 1000);
 
