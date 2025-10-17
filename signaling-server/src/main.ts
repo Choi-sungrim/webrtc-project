@@ -5,14 +5,14 @@ import { IoAdapter } from '@nestjs/platform-socket.io';
 
 async function bootstrap() {
   const httpsOptions = {
-    key: fs.readFileSync('./cert.key'),
-    cert: fs.readFileSync('./cert.crt'),
+    key: fs.readFileSync('./livekit.host.com+1-key.pem'),
+    cert: fs.readFileSync('./livekit.host.com+1.pem'),
   };
 
   const app = await NestFactory.create(AppModule, { httpsOptions });
   app.useWebSocketAdapter(new IoAdapter(app));
 
-  const localAddr = '192.168.100.56';
+  const localAddr = '192.168.100.20';
   const localPort = 3000;
   const listenPort = 8181;
   const https = 'https://';

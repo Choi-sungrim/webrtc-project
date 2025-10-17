@@ -10,6 +10,8 @@ services:
       - "443:443"
     volumes:
       - ./caddy.yaml:/etc/caddy.yaml
+      - ./livekit.host.com+1.pem:/etc/livekit/certs/livekit.host.com+1.pem
+      - ./livekit.host.com+1-key.pem:/etc/livekit/certs/livekit.host.com+1-key.pem
       - caddy_data:/data
     depends_on:
       - livekit

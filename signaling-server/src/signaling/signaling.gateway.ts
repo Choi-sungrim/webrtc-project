@@ -10,7 +10,7 @@ import { Offer, ConnectedSocket } from './interfaces/offer.interface';
 
 @WebSocketGateway({
   cors: {
-    origin: ['https://localhost:3000', 'https://192.168.100.56:3000'],
+    origin: ['https://localhost:3000', 'https://192.168.100.20:3000'],
     methods: ['GET', 'POST'],
     credentials: true,
   },
