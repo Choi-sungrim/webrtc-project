@@ -2,29 +2,39 @@ logging:
   logs:
     default:
       level: INFO
+
 storage:
-  "module": "file_system"
-  "root": "/data"
+  module: file_system
+  root: /data
+
 apps:
   tls:
     certificates:
-      automate:
-        - livekit.host.com
-        - livekit.host-turn.com
+      load_files:
+        - certificate: /etc/livekit/certs/livekit.host.com+1.pem
+          key: /etc/livekit/certs/livekit.host.com+1-key.pem
+
   layer4:
     servers:
       main:
-        listen: [":443"]
+        listen:
+          - ":443"
+
         routes:
+          # ✅ TURN (TLS 5349)
           - match:
-            - tls:
-                sni:
-                  - "livekit.host-turn.com"
+              - tls:
+                  sni:
+                    - "livekit.host-turn.com"
             handle:
               - handler: tls
+                connection_policies:
+                  - alpn: ["turn"]
               - handler: proxy
                 upstreams:
-                  - dial: ["localhost:5349"]
+                  - dial: ["livekit:5349"]
+
+          # ✅ LiveKit WebRTC / WSS / HTTPS
           - match:
               - tls:
                   sni:
@@ -35,4 +45,4 @@ apps:
                   - alpn: ["http/1.1"]
               - handler: proxy
                 upstreams:
-                  - dial: ["localhost:7880"]
+                  - dial: ["livekit:7880"]
