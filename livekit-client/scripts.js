@@ -6,7 +6,7 @@ import {
 } from "livekit-client";
 
 // const LIVEKIT_URL = "wss://webrtctest-hdcsqoeo.livekit.cloud"; // cloudService
-const LIVEKIT_URL = "wss://peripherally-longish-bronson.ngrok-free.dev";
+const LIVEKIT_URL = "wss://livekit.host.com";
 const NESTJS_BASE_URL = "https://172.30.1.48:8181";
 
 const userName = "User-" + Math.floor(Math.random() * 1000);
